@@ -24,7 +24,7 @@ var patchRequest = (data, endpoint) => {
   });
 }
 
-function clearForm() {
+var clearForm = () => {
   $("#subject").val('');
   $("#predicate").val('');
   $("#object").val('');
@@ -34,16 +34,10 @@ function updatePermalink() {
 
 }
 
-function resetTable() {
+var resetTable = () => {
   query("?s", "?p", "?o");
 }
 
-function queryGen() {
-  var subject = document.getElementById('subject').value;
-  var predicate = document.getElementById('predicate').value;
-  var object = document.getElementById('object').value;
-  query(subject, predicate, object);
-}
 
 var query = async (subject, predicate, object) => {
   subject = await validateSubject(subject);
@@ -75,6 +69,7 @@ var query = async (subject, predicate, object) => {
   }
 
   if (document.getElementById("log-cmds").checked) {
+    console.log('Query URL: \n' + url);
     console.log('Query body: \n' + query);
   }
 
@@ -82,10 +77,10 @@ var query = async (subject, predicate, object) => {
   makeTable(url);
 }
 
-async function recordGen() {
-  var subject = await validateSubject(document.getElementById('subject').value);
-  var predicate = await validatePredicate(document.getElementById('predicate').value);
-  var object = await validateObject(document.getElementById('object').value, true);
+var recordGen = async (subject, predicate, object) => {
+  var subject = await validateSubject(subject);
+  var predicate = await validatePredicate(predicate);
+  var object = await validateObject(object, true);
   var graph = document.getElementById('docName').value;
   var endpoint = document.getElementById('endpoint').value;
 
@@ -111,16 +106,17 @@ async function recordGen() {
   }
 
   if (document.getElementById("log-cmds").checked) {
+    console.log('Insert URL: \n' + url);
     console.log('Insert body: \n' + cmd);
   }
 
   await resetTable();
 }
 
-async function recordDel() {
-  var subject = await validateSubject(document.getElementById('subject').value);
-  var predicate = await validatePredicate(document.getElementById('predicate').value);
-  var object = await validateObject(document.getElementById('object').value, false);
+var recordDel = async (subject, predicate, object) => {
+  var subject = await validateSubject(subject);
+  var predicate = await validatePredicate(predicate);
+  var object = await validateObject(object, false);
   var graph = document.getElementById('docName').value;
   var endpoint = document.getElementById('endpoint').value;
 
@@ -147,6 +143,7 @@ async function recordDel() {
   }
 
   if (document.getElementById("log-cmds").checked) {
+    console.log('Query URL: \n' + url);
     console.log('Delete body: \n' + cmd);
   }
 
