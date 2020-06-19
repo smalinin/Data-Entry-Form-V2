@@ -99,11 +99,11 @@
 					<textarea type="text" class="form-control" id="object" onchange="updatePermalink()" placeholder="Object"></textarea>
 				</div>
 				<div class="button-wrapper">
-					<button id="clearBtnID" type="button" onclick="clearForm()" class="btn btn-primary">Clear</button>
-					<button id="insertBtnID2" type="button" onclick="recordGen()" class="btn btn-success">Insert</button>
-					<button id="deleteBtnID2" type="button" onclick="recordDel()" class="btn btn-danger">Delete</button>
-					<button id="queryBtnID2" type="button" onclick="queryGen()" class="btn btn-warning">Query</button>
-					<button id="dataBtnID2" type="button" onclick="resetTable()" class="btn btn-primary">Reset Table</button>
+					<button id="clearBtn" type="button" onclick="clearForm()" class="btn btn-primary">Clear</button>
+					<button id="insertBtn" type="button" onclick="recordGen(subject.value, predicate.value, object.value)" class="btn btn-success">Insert</button>
+					<button id="deleteBtn" type="button" onclick="recordDel(subject.value, predicate.value, object.value)" class="btn btn-danger">Delete</button>
+					<button id="queryBtn" type="button" onclick="query(subject.value, predicate.value, object.value)" class="btn btn-warning">Query</button>
+					<button id="dataBtn" type="button" onclick="resetTable()" class="btn btn-primary">Reset Table</button>
 				</div>
 			</div>
 
@@ -113,11 +113,11 @@
 		</div>
 
 		<!-- Scripts -->
-		<script src="js/data-table.js"></script>
 		<script src="js/validation-helpers.js"></script>
 		<script src="js/subject-validation.js"></script>
 		<script src="js/predicate-validation.js"></script>
 		<script src="js/object-validation.js"></script>
+		<script src="js/data-table.js"></script>
 		<script src="js/btn-functions.js"></script>
 		<script> resetTable(); </script>
 	</body>

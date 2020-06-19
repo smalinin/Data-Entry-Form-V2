@@ -1,7 +1,7 @@
 var predicateRange = async str => {
   var graph = document.getElementById("docName").value;
 
-  var range_query =
+  var query =
   "PREFIX : <" + graph + "#>\n"
   + "ASK \n"
   + "WHERE \n"
@@ -10,13 +10,12 @@ var predicateRange = async str => {
   + "filter (?range in (rdfs:Literal, xsd:string, xsd:decimal, xsd:integer, xsd:boolean, xsd:date, xsd:time))\n"
   +"}"
 
-  var endpoint = document.getElementById("endpoint").value; + "?default-graph-uri=&query=" ;
-  let url = endpoint + encodeURIComponent(range_query) + "&should-sponge=&format=application%2Fsparql-results%2Bjson" ;
+  var url = document.getElementById('endpoint').value + "?default-graph-uri=&query=" + encodeURIComponent(query) + "&should-sponge=&format=application%2Fsparql-results%2Bjson";
 
-  // if (document.getElementById("cmdID").checked == true) {
-  //   console.log("Recieving Predicate Range From: " + url);
-  //   console.log("Query" + range_query);
-  // }
+  if (document.getElementById("log-cmds").checked == true) {
+    console.log("Query URL: " + url);
+    console.log("Query Body" + query);
+  }
 
   const options = {
                       method: 'GET',
@@ -63,7 +62,7 @@ var formatObject = async (str, validate) => {
 
   // If object should be validated
   if (validate) {
-    var range = await predicateRange(str);
+    var range = await predicateRange(await validatePredicate(str));
     if (str.includes('"') || str.includes("'")) {
       range = true ;
     }
