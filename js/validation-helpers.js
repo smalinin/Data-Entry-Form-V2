@@ -1,4 +1,4 @@
-var formatLiteral = str => {
+function formatLiteral(str) {
   str = str.trim();
   if (str.charAt(0) === '\"' && str.charAt(str.length - 1) === '\"') {
     return str;
@@ -13,10 +13,10 @@ var formatLiteral = str => {
       }
     }
   }
-  return "Subject Error: Literal value is incorrectly quoted"
+  return '\"' + str + '\"';
 }
 
-var isBlankNode = str => {
+function isBlankNode(str) {
   str = str.trim();
   if (str.charAt(0) == "_" && str.charAt(1) == ":") {
     return true ;
@@ -26,7 +26,7 @@ var isBlankNode = str => {
   return false;
 }
 
-var formatBlankNode = str => {
+function formatBlankNode(str) {
   str = str.trim();
   if (str.charAt(0) == "_" && str.charAt(1) == ":") {
     return str ;
@@ -34,10 +34,10 @@ var formatBlankNode = str => {
   if (str.charAt(0) == "[" && str.charAt(str.length-1) == "]") {
     return str ;
   }
-  return "Subject Error: Blank Node is incorrectly quotted" ;
+  return "Error: Blank Node is incorrectly quotted" ;
 }
 
-var isLangTag = str => {
+function isLangTag(str) {
   const langexp = /@[a-zA-Z][a-zA-Z]/ ;
   str = str.trim();
   if (langexp.test(str)) {
@@ -46,15 +46,23 @@ var isLangTag = str => {
   return false ;
 }
 
-var formatLangTag = str => {
+function isTyped(str) {
   str = str.trim();
-  if (str.charAt(str.length - 1) === "@") {
-    if (str.charAt(0) === '\"' && str.charAt(str.length - 2) === '\"') {// String is double quoted
+  if (str.includes("^^")) {
+    return true ;
+  }
+  return false ;
+}
+
+function formatLangTag(str) {
+  str = str.trim();
+  if (str.charAt(str.length - 3) === "@") {
+    if (str.charAt(0) == '\"' && str.charAt(str.length - 4) == '\"') {// String is double quoted
       return str;
     }
-    if (str.charAt(0) === '\'' && str.charAt(str.length - 2) === '\'') {// String is single quoted
+    if (str.charAt(0) == '\'' && str.charAt(str.length - 4) == '\'') {// String is single quoted
       return str;
     }
   }
-  return "Subject Error: Language Tag is incorrectly formatted";
+  return "Error: Language Tag is incorrectly formatted";
 }

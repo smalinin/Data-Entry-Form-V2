@@ -1,4 +1,4 @@
-var shortenLink = str => {
+function shortenLink(str) {
   if (str.includes('#') && str.lastIndexOf("#") != str.length - 1) {
     return str.substring(str.lastIndexOf("#") + 1);
   }
@@ -8,7 +8,7 @@ var shortenLink = str => {
   return str;
 }
 
-var formatURI = str => {
+function formatURI(str) {
   const urlexp = /(https|http|mailto|tel|dav|ftp|ftps|urn)[:^/s]/i;
   if (document.getElementById("fct").checked) {
     if (str.includes(document.getElementById('docName').value) || urlexp.test(str)) {
@@ -18,7 +18,15 @@ var formatURI = str => {
   return str;
 }
 
-var makeTable = async queryURL => {
+function formatDisplay(str) {
+  const urlexp = /(https|http|mailto|tel|dav|ftp|ftps|urn)[:^/s]/i;
+  if (urlexp.test(str)) {
+      return  '<a href=' + formatURI(str) + '" target="_blank" title="' + formatURI(str) + '">' + shortenLink(str) + '</a>';
+  }
+  return str;
+}
+
+async function makeTable(queryURL) {
   var columns = [];
   var tableData = "";
   try {
@@ -57,7 +65,7 @@ var makeTable = async queryURL => {
         columnDefs: [{
           targets: "_all",
           render: function (data, type, full, meta) {
-            return '<a href="' + formatURI(data) + '" target="_blank" title="' + formatURI(data) + '">' + shortenLink(data) + '</a>';
+            return formatDisplay(data);
           }
         }]
       })

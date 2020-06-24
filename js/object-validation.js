@@ -1,4 +1,4 @@
-var predicateRange = async str => {
+async function predicateRange(str) {
   var graph = document.getElementById("docName").value;
 
   var query =
@@ -13,8 +13,8 @@ var predicateRange = async str => {
   var url = document.getElementById('endpoint').value + "?default-graph-uri=&query=" + encodeURIComponent(query) + "&should-sponge=&format=application%2Fsparql-results%2Bjson";
 
   if (document.getElementById("log-cmds").checked == true) {
-    console.log("Query URL: " + url);
-    console.log("Query Body" + query);
+    console.log("Query URL: \n" + url);
+    console.log("Query Body: \n" + query);
   }
 
   const options = {
@@ -29,9 +29,7 @@ var predicateRange = async str => {
 
   try {
     const resp = await fetch(url,options); // resp awaits completion of fetch
-    if (resp.status >= 200 && resp.status <= 300) {
-      console.log(resp.status + " - " + resp.statusText);
-    } else {
+    if (!resp.status >= 200 && !resp.status <= 300) {
       throw new Error("Error " + resp.status +" - " + resp.statusText) ;
     }
     const json = await resp.json(); // constant awaits resp before being assigned (so it isn't assigned as a promise)
@@ -42,8 +40,8 @@ var predicateRange = async str => {
   }
 }
 
-var validateObject = async (str, validate) => {
-  var object = await formatObject(str, validate);
+async function validateObject(pred, str, validate) {
+  var object = await formatObject(pred, str, validate);
   if (object.includes("Error")) {
     alert(object);
     return null;
@@ -51,7 +49,7 @@ var validateObject = async (str, validate) => {
   return object;
 }
 
-var formatObject = async (str, validate) => {
+async function formatObject(pred, str, validate) {
   const urlexp = /(https|http|mailto|tel|dav|ftp|ftps|urn)[:^/s]/i;
   str = str.trim();
 
@@ -62,7 +60,7 @@ var formatObject = async (str, validate) => {
 
   // If object should be validated
   if (validate) {
-    var range = await predicateRange(await validatePredicate(str));
+    var range = await predicateRange(await validatePredicate(pred));
     if (str.includes('"') || str.includes("'")) {
       range = true ;
     }
@@ -95,6 +93,14 @@ var formatObject = async (str, validate) => {
       return formatBlankNode(str);
     }
 
+    if (isLangTag(str)) {
+      return formatLangTag(str);
+    }
+
+    if (isTyped(str)) {
+      return str;
+    }
+
     return formatLiteral(str);
   }
 
@@ -114,6 +120,10 @@ var formatObject = async (str, validate) => {
   // Case: input is a literal with language tag
   if (isLangTag(str)) {
     return formatLangTag(str);
+  }
+  // Case: input is typed literal
+  if (isTyped(str)) {
+    return str;
   }
   // Case: Unquoted URI
   if (urlexp.test(str)) {

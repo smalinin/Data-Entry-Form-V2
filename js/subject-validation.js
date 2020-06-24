@@ -1,4 +1,4 @@
-var validateSubject = async str => {
+async function validateSubject(str) {
   var subject = await formatSubject(str);
   if (subject.includes("Error")) {
     alert(subject);
@@ -7,7 +7,7 @@ var validateSubject = async str => {
   return subject;
 }
 
-var formatSubject = str => {
+function formatSubject(str) {
   const urlexp = /(https|http|mailto|tel|dav|ftp|ftps|urn)[:^/s]/i;
   str = str.trim();
   // Case: string is ? variable
@@ -29,6 +29,10 @@ var formatSubject = str => {
   // Case: input is a literal with language tag
   if (isLangTag(str)) {
     return formatLangTag(str);
+  }
+  // Case: input is typed literal
+  if (isTyped(str)) {
+    return str;
   }
   // Case: Unquoted URI
   if (urlexp.test(str)) {

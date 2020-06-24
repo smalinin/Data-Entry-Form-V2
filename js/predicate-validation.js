@@ -1,4 +1,4 @@
-var validatePredicate = async str => {
+async function validatePredicate(str) {
   var predicate = await formatPredicate(str);
   if (predicate.includes("Error")) {
     alert(predicate);
@@ -7,7 +7,7 @@ var validatePredicate = async str => {
   return predicate;
 }
 
-var formatPredicate = str => {
+function formatPredicate(str) {
   const urlexp = /(https|http|mailto|tel|dav|ftp|ftps|urn)[:^/s]/i;
   str = str.trim();
   // Case: string is ? variable

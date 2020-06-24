@@ -1,4 +1,4 @@
-var postRequest = (data, endpoint) => {
+function postRequest(data, endpoint) {
   $.ajax({
     url: endpoint,
     type: "POST",
@@ -11,7 +11,7 @@ var postRequest = (data, endpoint) => {
   });
 }
 
-var patchRequest = (data, endpoint) => {
+function patchRequest(data, endpoint) {
   $.ajax({
     url: endpoint,
     type: "PATCH",
@@ -24,7 +24,7 @@ var patchRequest = (data, endpoint) => {
   });
 }
 
-var clearForm = () => {
+function clearForm () {
   $("#subject").val('');
   $("#predicate").val('');
   $("#object").val('');
@@ -34,15 +34,20 @@ function updatePermalink() {
 
 }
 
-var resetTable = () => {
+function resetTable() {
   query("?s", "?p", "?o");
 }
 
 
-var query = async (subject, predicate, object) => {
+async function query(subject, predicate, object) {
   subject = await validateSubject(subject);
   predicate = await validatePredicate(predicate);
-  object = await validateObject(object, false);
+  object = await validateObject(predicate, object, false);
+
+  if (!subject || !predicate || !object) {
+    console.error("Query Failed");
+  }
+
   var graph = document.getElementById('docName').value;
 
   if (document.getElementById('dbmsBtn').checked) {
@@ -68,21 +73,26 @@ var query = async (subject, predicate, object) => {
     query = "DEFINE input:inference" + ' ' + "'" + document.getElementById("inferenceRule").value + "'" + ' \n' + query ;
   }
 
+  var url = document.getElementById('endpoint').value + "?default-graph-uri=&query=" + encodeURIComponent(query) + "&should-sponge=&format=text%2Fcsv";
+
   if (document.getElementById("log-cmds").checked) {
     console.log('Query URL: \n' + url);
     console.log('Query body: \n' + query);
   }
 
-  var url = document.getElementById('endpoint').value + "?default-graph-uri=&query=" + encodeURIComponent(query) + "&should-sponge=&format=text%2Fcsv";
   makeTable(url);
 }
 
-var recordGen = async (subject, predicate, object) => {
+async function recordGen(subject, predicate, object) {
   var subject = await validateSubject(subject);
   var predicate = await validatePredicate(predicate);
-  var object = await validateObject(object, true);
+  var object = await validateObject(predicate, object, true);
   var graph = document.getElementById('docName').value;
   var endpoint = document.getElementById('endpoint').value;
+
+  if (!subject || !predicate || !object) {
+    console.error("Insert Failed");
+  }
 
   if (document.getElementById('dbmsBtn').checked) {
     var cmd =
@@ -106,19 +116,20 @@ var recordGen = async (subject, predicate, object) => {
   }
 
   if (document.getElementById("log-cmds").checked) {
-    console.log('Insert URL: \n' + url);
     console.log('Insert body: \n' + cmd);
   }
-
-  await resetTable();
 }
 
 var recordDel = async (subject, predicate, object) => {
   var subject = await validateSubject(subject);
   var predicate = await validatePredicate(predicate);
-  var object = await validateObject(object, false);
+  var object = await validateObject(predicate, object, false);
   var graph = document.getElementById('docName').value;
   var endpoint = document.getElementById('endpoint').value;
+
+  if (!subject || !predicate || !object) {
+    console.error("Delete Failed");
+  }
 
   if (document.getElementById('dbmsBtn').checked) {
     var cmd =
@@ -143,9 +154,6 @@ var recordDel = async (subject, predicate, object) => {
   }
 
   if (document.getElementById("log-cmds").checked) {
-    console.log('Query URL: \n' + url);
     console.log('Delete body: \n' + cmd);
   }
-
-  await resetTable();
 }
