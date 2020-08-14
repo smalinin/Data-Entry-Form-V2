@@ -20,6 +20,7 @@
 	</head>
 
 	<body>
+		<div class="spinner"></div>
 		<div class="grid-container">
 		  <div class="header">
 				<nav class="navbar navbar-expand-md navbar-light" style="border-bottom: 1px solid;">
@@ -103,7 +104,7 @@
 					<button id="insertBtn" type="button" onclick="recordGen(subject.value, predicate.value, object.value)" class="btn btn-success">Insert</button>
 					<button id="deleteBtn" type="button" onclick="recordDel(subject.value, predicate.value, object.value)" class="btn btn-danger">Delete</button>
 					<button id="queryBtn" type="button" onclick="query(subject.value, predicate.value, object.value)" class="btn btn-warning">Query</button>
-					<button id="dataBtn" type="button" onclick="resetTable()" class="btn btn-primary">Update Table</button>
+					<button id="dataBtn" type="button" onclick="resetTable()" class="btn btn-primary">Reset Table</button>
 				</div>
 			</div>
 
