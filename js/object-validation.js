@@ -83,7 +83,7 @@ async function formatObject(pred, str, validate) {
       if (str.charAt(0) == "#") {
         return '<' + str + '>' ; // Case: input is an unquoted relative uri. Solution: quote it
       }
-      if (str.includes(":")) {
+      if (str.includes(":") || str.includes("<#")) {
         return str ;
       }
       return ':' + str ;
@@ -138,7 +138,7 @@ async function formatObject(pred, str, validate) {
     return '<' + str + '>' ; // Case: input is an unquoted relative uri. Solution: quote it
   }
   // Case: input is a curie
-  if (str.includes(":")) {
+  if (str.includes(":") || str.includes("<#")) {
     return str ;
   }
   // Case: if no other case is hit make a relative URR

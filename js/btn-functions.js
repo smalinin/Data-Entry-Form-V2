@@ -1,4 +1,5 @@
 function postRequest(data, endpoint) {
+  $(".spinner").css({ 'display' : 'block'});
   $.ajax({
     url: endpoint,
     type: "POST",
@@ -6,12 +7,18 @@ function postRequest(data, endpoint) {
     contentType: "application/sparql-update; charset=UTF-8",
     error: (request, status, error) => {
       console.error(request.responseText);
-      alert(status + ": " + error);
+      alert(status + ": " + request.responseText);
+      $(".spinner").css({ 'display' : 'none'});
+    },
+    complete: () => {
+      resetTable();
+      $(".spinner").css({ 'display' : 'none'});
     }
   });
 }
 
 function patchRequest(data, endpoint) {
+  $(".spinner").css({ 'display' : 'block'});
   $.ajax({
     url: endpoint,
     type: "PATCH",
@@ -19,7 +26,12 @@ function patchRequest(data, endpoint) {
     contentType: "application/sparql-update; charset=UTF-8",
     error: (request, status, error) => {
       console.error(request.responseText);
-      alert(status + ": " + error);
+      alert(status + ": " + request.responseText);
+      $(".spinner").css({ 'display' : 'none'});
+    },
+    complete: () => {
+      resetTable();
+      $(".spinner").css({ 'display' : 'none'});
     }
   });
 }

@@ -47,7 +47,7 @@ function formatSubject(str) {
     return '<' + str + '>' ; // Case: input is an unquoted relative uri. Solution: quote it
   }
   // Case: input is a curie
-  if (str.includes(":")) {
+  if (str.includes(":") || str.includes("<#"))  {
     return str ;
   }
   // Case: if no other case is hit make a relative URR

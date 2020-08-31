@@ -20,10 +20,11 @@
 	</head>
 
 	<body>
+		<div class="spinner"></div>
 		<div class="grid-container">
 		  <div class="header">
 				<nav class="navbar navbar-expand-md navbar-light" style="border-bottom: 1px solid;">
-					<a class="navbar-brand mr-auto" href="Main.html" style="font-size: max(3vw, 25px);">Data Entry Form</a>
+					<a class="navbar-brand mr-auto" href="main.html" style="font-size: max(3vw, 25px);">Data Entry Form</a>
 					<button class="navbar-toggler ml-auto" data-toggle="collapse" data-target="#collapse_target">
 						<span class="navbar-toggler-icon"></span>
 					</button>
@@ -31,7 +32,7 @@
 						<ul class="navbar-nav ml-auto" style="padding-left: 10px; ">
 							<li class="nav-item">Login</li>
 							<li class="nav-item">Permalink</li>
-							<li class="nav-item"><a href="About.html">About</a> </li>
+							<li class="nav-item"><a href="about.html">About</a> </li>
 							<li class="nav-item dropdown">
 								<a class="nav-link dropdown-toggle" style="display: inline-block; padding: 0 0 0 0; color: #007bff;" href="#about" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 									Options
@@ -103,7 +104,7 @@
 					<button id="insertBtn" type="button" onclick="recordGen(subject.value, predicate.value, object.value)" class="btn btn-success">Insert</button>
 					<button id="deleteBtn" type="button" onclick="recordDel(subject.value, predicate.value, object.value)" class="btn btn-danger">Delete</button>
 					<button id="queryBtn" type="button" onclick="query(subject.value, predicate.value, object.value)" class="btn btn-warning">Query</button>
-					<button id="dataBtn" type="button" onclick="resetTable()" class="btn btn-primary">Update Table</button>
+					<button id="dataBtn" type="button" onclick="resetTable()" class="btn btn-primary">Reset Table</button>
 				</div>
 			</div>
 
