@@ -1,19 +1,5 @@
-* {
-  padding: 0;
-  margin: 0;
-  background-color: white;
-}
 
-body {
-  width: 100%;
-  overflow-x: hidden;
-  -webkit-box-sizing: border-box;
-  -moz-box-sizing: border-box;
-  box-sizing: border-box;
-  position:relative;
-}
-
-.spinner {
+#spinner {
   position:fixed;
   width:100%;
   left:0;right:0;top:0;bottom:0;
@@ -30,7 +16,7 @@ body {
   }
 }
 
-.spinner::after {
+#spinner::after {
   content:'';
   display:block;
   position:absolute;
@@ -45,39 +31,7 @@ body {
   animation: spin .8s linear infinite;
 }
 
-.grid-container {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  grid-template-rows: auto 1fr;
-  grid-template-areas:
-    'hd hd'
-    'frm tbl';
-  grid-gap: 2vw;
-}
 
-.grid-container > div {
-  font-family: sans-serif;
-}
-
-.header {grid-area: hd;}
-.header > .navbar {font-size: 1.5vw;}
-.navbar-nav > li {padding: 0vw 0.5vw 0vw 0.5vw; font-size: 20px;}
-.navbar-nav > li > a {color:#212529 !important;}
-.navbar-nav > li > a:hover {color:gray !important; text-decoration: none;}
-.form-check {margin: 0 5px 5px 5px;}
-.form { grid-area: frm;}
-.form > div {padding: 0 0 10px 5px;}
-.form-group {margin-left: 10px;}
-.form-group > label {font-size: 20px; font-weight: bold;}
-.form-table { grid-area: tbl; margin-right: 1vw}
-.button-wrapper {
-  display: flex;
-  flex-wrap: wrap;
-  align-content: space-between;
-  justify-content: left;
-  margin-left: 10px;
-}
-.btn {margin-right: 10px;}
 #formTable {width: auto;}
 
 table.dataTable tbody td {
@@ -85,20 +39,77 @@ table.dataTable tbody td {
     vertical-align: top;
 }
 
+/***
 a:hover, a:focus {
     color: blue !important;
 }
+***/
 
-@media only screen and (max-width: 992px) {
-  .grid-container {
-    grid-template-columns: 100%;
-    grid-template-rows: auto auto auto;
-    grid-template-areas:
-      'hd'
-      'frm'
-      'tbl';
-  }
-  .navbar-nav > li {font-size: 15px}
-  .form-table {margin: 0 1vw 0 1vw;}
-  .button-wrapper {justify-content: center;}
+
+.dropdown-menu {
+	padding-left: 15px;
+	width: 450px;
+}
+
+.glyphicon.glyphicon-cog {
+	font-size: 20px;
+}
+
+
+#snackbar {
+  visibility: hidden;
+  min-width: 250px;
+  margin-left: -125px;
+  background-color: #333;
+  color: #fff;
+  text-align: center;
+  border-radius: 2px;
+  padding: 16px;
+  position: fixed;
+  z-index: 1;
+  left: 50%;
+  bottom: 30px;
+  font-size: 17px;
+}
+
+#snackbar.show {
+  visibility: visible;
+  -webkit-animation: fadein 0.5s, fadeout 0.5s 2.5s;
+  animation: fadein 0.5s, fadeout 0.5s 2.5s;
+}
+
+@-webkit-keyframes fadein {
+  from {bottom: 0; opacity: 0;} 
+  to {bottom: 30px; opacity: 1;}
+}
+
+@keyframes fadein {
+  from {bottom: 0; opacity: 0;}
+  to {bottom: 30px; opacity: 1;}
+}
+
+@-webkit-keyframes fadeout {
+  from {bottom: 30px; opacity: 1;} 
+  to {bottom: 0; opacity: 0;}
+}
+
+@keyframes fadeout {
+  from {bottom: 30px; opacity: 1;}
+  to {bottom: 0; opacity: 0;}
+}
+
+
+/* sets input field red if invalid */
+.error {
+	border: 2px solid red;
+}
+
+/* sets error message color red */
+.errorMessage {
+	color: red;
+}
+
+/* wraps text in table */
+td {
+	word-wrap: break-word;
 }

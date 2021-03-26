@@ -1,125 +1,279 @@
 <!DOCTYPE HTML>
 <html lang="en">
-	<head>
-		<meta charset="utf-8" name="viewport" content="width=device-width,initial-scale=1">
-		<!-- Main CSS -->
-		<link rel="stylesheet" type="text/css" href="css/main.css"/>
-		<!-- Jquery -->
-		<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-		<script src="https://code.jquery.com/jquery-3.5.1.js"></script>
-		<!-- Bootstrap -->
-		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
-		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/4.1.2/papaparse.js"></script>
-		<!-- DataTable -->
-		<script src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js"></script>
-		<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.21/css/jquery.dataTables.min.css"/>
+<head>
+	<meta charset="utf-8" name="viewport" content="width=device-width,initial-scale=1">
 
-	</head>
+	<!-- Latest compiled and minified CSS -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+	<!-- jQuery library -->
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+	<!-- Latest compiled JavaScript -->
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+	<!-- Authentication and RDF procssing library -->
+        <script src="./solid/solid-client-authn.bundle.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/rdflib@0.20.1/dist/rdflib.min.js"></script>
 
-	<body>
-		<div class="spinner"></div>
-		<div class="grid-container">
-		  <div class="header">
-				<nav class="navbar navbar-expand-md navbar-light" style="border-bottom: 1px solid;">
-					<a class="navbar-brand mr-auto" href="main.html" style="font-size: max(3vw, 25px);">Data Entry Form</a>
-					<button class="navbar-toggler ml-auto" data-toggle="collapse" data-target="#collapse_target">
-						<span class="navbar-toggler-icon"></span>
-					</button>
-					<div class="collapse navbar-collapse" id="collapse_target" style="text-align: right;">
-						<ul class="navbar-nav ml-auto" style="padding-left: 10px; ">
-							<li class="nav-item">Login</li>
-							<li class="nav-item">Permalink</li>
-							<li class="nav-item"><a href="about.html">About</a> </li>
-							<li class="nav-item dropdown">
-								<a class="nav-link dropdown-toggle" style="display: inline-block; padding: 0 0 0 0; color: #007bff;" href="#about" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-									Options
-								</a>
-								<div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
-									<div class="form-check">
-										<input class="form-check-input" type="checkbox" value="" id="fct">
-										<label class="form-check-label" for="fct">
-											Faceted Browser Links
-										</label>
-									</div>
-									<div class="form-check">
-										<input class="form-check-input" type="checkbox" value="" id="sameAs">
-										<label class="form-check-label" for="sameAs">
-											Enable owl:sameAs Reasoning & Inference
-										</label>
-									</div>
-									<div class="form-check">
-										<input class="form-check-input" type="checkbox" value="" id="inference">
-										<label class="form-check-label" for="inference">
-											Custom Inference Rule
-										</label>
-										<input type="text" style="max-width: 250px" value="urn:ifp:inference:rule" id="inferenceRule">
-									</div>
-									<div class="form-check">
-										<input class="form-check-input" type="checkbox" value="" id="log-cmds">
-										<label class="form-check-label" for="log-cmds">
-											Console Log Commands
-										</label>
-									</div>
+	<!-- DataTable -->
+	<script src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js"></script>
+	<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.21/css/jquery.dataTables.min.css"/>
+
+	<!-- Main CSS -->
+	<link rel="stylesheet" type="text/css" href="css/main.css"/>
+
+	<script src="js/main.js"></script>
+</head>
+
+<body>
+        <div id="snackbar">
+       	  <div id="msg1"></div>
+          <div id="msg2"></div>
+        </div>
+
+	<div id="spinner"></div>
+
+	<!-- Start of tabs container -->
+	<div class="container">
+	    <div class="row">
+		<!-- Create tabs menu -->
+		<ul class="nav nav-tabs">
+			<li class="active" id="dbmsTabID"><a data-toggle="tab" href="#dbmsID">DBMS</a></li>
+			<li id="fsTabID"><a data-toggle="tab" href="#fsID">File System</a></li>
+			<!-- Start Dropdown -->
+			<li class="pull-right" class="dropdown">
+				<a class="dropdown-toggle" style="max-height: 40px" data-toggle="dropdown" href="#">
+					<span class="glyphicon glyphicon-cog"></span>
+					<span class="caret"></span></a>
+
+				<ul class="dropdown-menu">
+					<!-- Faceted Browser Links Checkbox  -->
+					<div class="checkbox">
+						<label><input id="fctID" type="checkbox" value="">Faceted Browser Links</label>
+					</div>
+					<!-- Full URI Query Results -->
+					<div class="checkbox">
+						<label><input id="uriID" type="checkbox" value="">Shortened URI Results</label>
+					</div>
+					<!-- Reasoning and Inference -->
+					<div class="checkbox">
+						<label><input id="riID" type="checkbox" value="">owl:sameAs Reasoning & Inference</label>
+					</div>
+					<!-- Inference Rule Name -->
+					<div class="checkbox">
+						<label><input id="ruleNameID" type="checkbox" value="">Inference Rule</label> 
+						<input type="text" style="max-width: 250px" value="urn:ifp:inference:rule" id="infRuleNameID">
+					</div>
+
+					<div >
+						<label style="font-weight: normal" >SPARQL Endpoint</label> 
+						<input type="text" style="width: 20em" value="https://linkeddata.uriburner.com/sparql" id="sparql_endpoint">
+					</div>
+
+					<!-- Console Print Commands Checkbox  -->
+					<div class="checkbox">
+						<label><input id="cmdID" type="checkbox" value="">Console Log Commands</label>
+					</div>
+					<!-- Number of Results per Page -->
+					<div class="form-group">
+						<label style="font-weight: normal" for="resultsID">Results per Page:</label>
+						<input type="text" style="width: 5em" value="5" id="resultsID">
+					</div>
+					<h5> Return Data As: </h4>
+						<!-- Default Download Type -->
+						<div class="radio">
+							<label><input id="defaultID" type="radio" name="radiogroup" checked>Default (JSON)</label>
+						</div>
+						<!-- CSV Download Checkbox  -->
+						<div class="radio">
+							<label><input id="csvID" type="radio" name="radiogroup">CSV</label>
+						</div>
+						<!-- XML Download Checkbox  -->
+						<div class="radio">
+							<label><input id="xmlID" type="radio" name="radiogroup">XML</label>
+						</div>
+				</ul>
+			</li>
+			<!-- End Dropdown -->
+			<a id="logged-href" href="" title="" style="margin-top: 5px; margin-left: 15px; max-height: 35px"
+				class="pull-right" class="hidden"><img id="uid-icon" src="./common/uid.png"></a>
+			<li class="pull-right"> <button id="loginID" style="margin-top: 5px" type="button"
+					class="hidden btn btn-primary">Login</button> </li>
+			<li class="pull-right"><button id="logoutID" style="margin-top: 5px" type="button"
+					class="hidden btn btn-danger">Logout</button></li>
+			<li class="pull-right"><a id="permalinkID">Permalink</a></li>
+			<li class="pull-right"> <button id="aboutID" style="margin-top: 5px" type="button"
+					class="btn btn-link">About</button> </li>
+
+		</ul>
+		<!-- End of tabs menu -->
+	    </div>	
+
+	    <div class="row">
+	      <div class="col-xs-6">
+		<!-- Add content to the tabs-->
+		<div class="tab-content">
+			<!-- Start DBMS Tab -->
+			<div id="dbmsID" class="tab-pane fade in active">
+				<div class="container">
+					<div class="row">
+						<!-- Form Div (Left Side) -->
+						<div class="col-xs-6">
+							<h1 style="text-align:center">Data Entry</h1>
+							<form id="dbmsFormID" class="form" method="post">
+								<div class="form-group">
+									<label for="subjectID">Subject</label>
+									<span class="glyphicon glyphicon-question-sign" data-toggle="tooltip"
+										data-original-title="If the subject is not a URI it will be used as the fragment identifier of a Relative URI."></span>
+									<textarea class="form-control" placeholder="Subject" rows="1"
+										style="resize:vertical" id="subjectID" ></textarea>
+									<p class="errorMessage" id="subjectErrorID"></p>
 								</div>
-							</li>
-						</ul>
-					</div>
-				</nav>
-			</div>
+								<div class="form-group">
+									<label for="predicateID">Predicate</label>
+									<span class="glyphicon glyphicon-question-sign" data-toggle="tooltip"
+										data-original-title="The predicate can either be a URI (ex. http://xmlns.com/foaf/0.1/name) or a curie (ex. foaf:name) because these are preloaded in Virtuoso."></span>
+									<input type="text" class="form-control" placeholder="Predicate" id="predicateID">
+									<p class="errorMessage" id="predicateErrorID"></p>
+								</div>
+								<div class="form-group">
+									<label for="objectID">Object</label> <span class="glyphicon glyphicon-question-sign"
+										data-toggle="tooltip"
+										data-original-title="Whether or not the Object is a literal value or a reference is determined by the range of the predicate. Quoting the Object will override this feature and make it a literal value."></span>
+									<textarea class="form-control" placeholder="Object" rows="1" style="resize:vertical"
+										id="objectID"></textarea>
+								</div>
+								<div class="form-group">
+									<label for="docNameID">Document Name</label>
+									<input type="text" class="form-control" value="urn:records:test" id="docNameID">
+									<p class="errorMessage" id="docNameErrorID"></p>
+								</div>
 
-		  <div class="form">
-				<div class="form-group" id="form-docName">
-					<div class="btn btn-group-toggle btn-block" data-toggle="buttons" style="padding: 0px; margin-bottom: 20px;">
-						<label class="btn btn-outline-dark active" style="width: 49%;">
-							<input type="radio" id="dbmsBtn" checked>DBMS</input>
-						</label>
-						<label class="btn btn-outline-dark" style="width: 49%;">
-							<input type="radio" id="fileSystemBtn">File System</input>
-						</label>
+								<!-- Start Buttons -->
+								<div class=button-wrapper>
+									<span>
+										<button id="clearBtnID" type="button"
+											class="btn btn-primary">Clear</button>
+										<button id="insertBtnID" type="button"
+											class="btn btn-success">Add</button>
+										<button id="deleteBtnID" type="button"
+											class="btn btn-danger">Delete</button>
+										<button id="queryBtnID" type="button"
+											class="btn btn-warning">Query</button>
+										<button id="dataBtnID" type="button"
+											class="btn btn-info">All Data</button>
+									</span>
+								</div>
+								<!-- End Buttons -->
+							</form>
+							<!-- End of Form Div -->
+						</div>
 					</div>
-					<label for="docName">Document Name</label>
-					<input type="text" class="form-control" id="docName" value="urn:records:test" onchange="updatePermalink()"></input>
-				</div>
-				<div class="form-group" id="form-endpoint">
-					<label for="endpoint">SPARQL Endpoint</label>
-					<input type="text" class="form-control" id="endpoint" value="https://linkeddata.uriburner.com/sparql" onchange="updatePermalink()"></input>
-				</div>
-				<div class="form-group" id="form-subject">
-					<label for="subject">Subject</label>
-					<textarea type="text" class="form-control" id="subject" onchange="updatePermalink()" placeholder="Subject"></textarea>
-				</div>
-				<div class="form-group" id="form-predicate">
-					<label for="predicate">Predicate</label>
-					<textarea type="text" class="form-control" id="predicate" onchange="updatePermalink()" placeholder="Predicate"></textarea>
-				</div>
-				<div class="form-group" id="form-object">
-					<label for="object">Object</label>
-					<textarea type="text" class="form-control" id="object" onchange="updatePermalink()" placeholder="Object"></textarea>
-				</div>
-				<div class="button-wrapper">
-					<button id="clearBtn" type="button" onclick="clearForm()" class="btn btn-primary">Clear</button>
-					<button id="insertBtn" type="button" onclick="recordGen(subject.value, predicate.value, object.value)" class="btn btn-success">Insert</button>
-					<button id="deleteBtn" type="button" onclick="recordDel(subject.value, predicate.value, object.value)" class="btn btn-danger">Delete</button>
-					<button id="queryBtn" type="button" onclick="query(subject.value, predicate.value, object.value)" class="btn btn-warning">Query</button>
-					<button id="dataBtn" type="button" onclick="resetTable()" class="btn btn-primary">Reset Table</button>
 				</div>
 			</div>
+			<!-- End DBMS Tab -->
 
-			<div class="form-table">
-				<table id="formTable" class="display" cellspacing="0" width="100%"></table>
+			<!-- Start File System Tab -->
+			<div id="fsID" class="tab-pane fade">
+				<div class="container">
+					<div class="row">
+						<!-- Form Div (Left Side) -->
+						<div class="col-xs-6">
+							<h1 style="text-align:center">Data Entry</h1>
+							<form id="fsFormID" class="form" method="post">
+								<div class="form-group">
+									<label for="subjectID">Subject</label>
+									<span class="glyphicon glyphicon-question-sign" data-toggle="tooltip"
+										data-original-title="If the subject is not a URI it will be used as the fragment identifier of a Relative URI."></span>
+									<textarea class="form-control" placeholder="Subject" rows="1"
+										style="resize:vertical" id="subjectID" ></textarea>
+									<p class="errorMessage" id="subjectErrorID"></p>
+								</div>
+								<div class="form-group">
+									<label for="predicateID">Predicate</label>
+									<span class="glyphicon glyphicon-question-sign" data-toggle="tooltip"
+										data-original-title="The predicate can either be a URI (ex. http://xmlns.com/foaf/0.1/name) or a curie (ex. foaf:name) because these are preloaded in Virtuoso."></span>
+									<input type="text" class="form-control" placeholder="Predicate" id="predicateID">
+									<p class="errorMessage" id="predicateErrorID"></p>
+								</div>
+								<div class="form-group">
+									<label for="objectID">Object</label> <span
+										class="glyphicon glyphicon-question-sign" data-toggle="tooltip"
+										data-original-title="Wether or not the Object is a literal value or a reference is determined by the range of the predicate. Quoting the Object will override this feature and make it a literal value."></span>
+									<textarea class="form-control" placeholder="Object" rows="1" style="resize:vertical"
+										id="objectID" ></textarea>
+								</div>
+								<div class="form-group">
+									<label for="docNameID">Document Name</label>
+									<input type="text" class="form-control"
+										value="https://id.myopenlink.net/public_home/KingsleyUyiIdehen/RWW-QA/test1.ttl"
+										id="docNameID" >
+									<p class="errorMessage" id="docNameErrorID"></p>
+								</div>
+
+								<!-- Start Buttons -->
+								<div class=button-wrapper>
+									<span>
+										<button id="clearBtnID" type="button"
+											class="btn btn-primary">Clear</button>
+										<button id="insertBtnID" type="button"
+											class="btn btn-success">Add</button>
+										<button id="deleteBtnID" type="button"
+											class="btn btn-danger">Delete</button>
+										<button id="queryBtnID" type="button"
+											class="btn btn-warning">Query</button>
+										<button id="dataBtnID" type="button"
+											class="btn btn-info">All Data</button>
+									</span>
+								</div>
+								<!-- End Buttons -->
+							</form>
+							<!-- End of Form Div -->
+						</div>
+					</div>
+				</div>
 			</div>
+			<!-- End File System Tab -->
+		<!-- End of tabs container -->
 		</div>
+	      </div>
 
-		<!-- Scripts -->
-		<script src="js/validation-helpers.js"></script>
-		<script src="js/subject-validation.js"></script>
-		<script src="js/predicate-validation.js"></script>
-		<script src="js/object-validation.js"></script>
-		<script src="js/data-table.js"></script>
-		<script src="js/btn-functions.js"></script>
-		<script> resetTable(); </script>
-	</body>
+	      <div class="col-xs-6">
+		</br>
+		<div class="form-table">
+			<table id="formTable" class="display" cellspacing="0" width="100%"></table>
+		</div>
+	      </div>
+
+	    </div>	
+
+
+<!-- Modal -->
+<div class="modal" id="about-dlg" tabindex="-1" role="dialog" aria-hidden="true" data-keyboard="false">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content" style="width:800px">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+        <h4 class="modal-title">About</h4>
+      </div>
+      <div class="modal-body">
+        <section style="overflow-wrap: break-word;">
+		<p style="padding-top: 10px"> Generic SPARQL Data Entry Form 2.0<br>
+		        Description: Simple Data Entry Form that helps unravel the power of RDF and SPARQL with regards to Structured Data creation and interaction. <br>
+		        Creator: <a href="https://jordan.solid.openlinksw.com:8444/profile/card#me">Jordan Idehen</a> (<a href="https://github.com/jidehen#this">Github</a>, <a href="https://www.linkedin.com/in/jordan-idehen-143934157/#this">LinkedIn</a>) <br>
+		        Supervisor: <a href="https://github.com/OpenLinkSoftware#this">OpenLink Software</a> <br>
+		        License: Public Domain
+		</p>
+        </section>
+        </p>
+      </div>
+      <div class="modal-footer">
+        <button id="btn-ok" type="button" class="btn btn-primary" data-dismiss="modal">Ok</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+</body>
 </html>
