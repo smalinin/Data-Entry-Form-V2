@@ -717,7 +717,7 @@ async function setTableSize() {
 
 //SPARQL INSERT SCRIPT
 async function recordGen() {
-	await setLimit();
+	setLimit();
 	showSpinner();
 	var subject = validateSubject();
 	var predicate = validatePredicate();
@@ -773,7 +773,7 @@ async function recordGen() {
 
 //SPARQL DELETE SCRIPT
 async function recordDel() {
-	await setLimit();
+	setLimit();
 	showSpinner();
 	var subject = validateSubject();
 	var predicate = validatePredicate();
@@ -979,7 +979,7 @@ async function executeQuery(data_query, is_query) {
 		data_query = data_query + "\n" + "OFFSET " + offset + "\n" + "LIMIT " + limit;
 	}
 ***/
-	data_query = data_query + "\n" + " LIMIT 100";
+	data_query = data_query + "\n" + " LIMIT " + limit;
 
 	if (DOC.iSel("riID").checked == true) {// if reasoning and inference is on
 		data_query = "DEFINE input:same-as" + '"yes" \n' + data_query;
@@ -1148,7 +1148,7 @@ async function predicateRange() {
 }
 
 async function turtleGen() {
-	await setLimit();
+	setLimit();
 	showSpinner();
 
 	var subject = validateSubject();
@@ -1199,7 +1199,7 @@ async function turtleGen() {
 }
 
 async function turtleDel() {
-	await setLimit();
+	setLimit();
 	showSpinner();
 
 	var subject = validateSubject();
