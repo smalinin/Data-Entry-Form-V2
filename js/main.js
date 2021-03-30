@@ -1352,7 +1352,7 @@ async function authLogin() {
 }
 
 async function authLogout() {
-	await authClient.logout()
+	await solidAuthFetcher.logout()
 	location.reload()
 }
 
