@@ -1,6 +1,4 @@
 var state;
-const authClient = solidClientAuthentication;
-const oidc_session = new authClient.Session();
 
 var limit = Number("0");
 var offset = Number("0");
@@ -239,16 +237,21 @@ class State {
   }
 
   
-  async updateLoginState() {
+  async updateLoginState(session) {
 	const loginButton = DOC.iSel('loginID');
 	const logoutButton = DOC.iSel('logoutID');
 
 	const loggedHref = DOC.iSel('logged-href')
-	const loggedIn = (oidc_session && oidc_session.info.isLoggedIn && oidc_session.info.webId);
+
+	if (!session) 
+	  session = await solidAuthFetcher.getSession();
+
+	const loggedIn = (session && session.loggedIn && session.webId);
+
 	loginButton.classList.toggle('hidden', loggedIn)
 	logoutButton.classList.toggle('hidden', !loggedIn)
 	if (loggedIn) {
-		var webid = oidc_session.info.webId;
+		var webid = session.webId;
 		if (webid) {
 		    this.webid = webid;
 			loggedHref.classList.remove('hidden')
@@ -684,7 +687,7 @@ async function setTableSize() {
 
 	var resp;
 	try {
-		resp = await oidc_session.fetch(url, options)
+		resp = await solidAuthFetcher.fetch(url, options)
 		
 		if (resp.ok && resp.status == 200) {
 			var data = await resp.json();
@@ -754,7 +757,7 @@ async function recordGen() {
 
 	var resp;
 	try {
-		resp = await oidc_session.fetch(url, options);
+		resp = await solidAuthFetcher.fetch(url, options);
 		if (resp.status >= 200 && resp.status <= 300) {
 			console.log(resp.status + " - " + resp.statusText);
 			updateTable();
@@ -812,7 +815,7 @@ async function recordDel() {
 
 	var resp;
 	try {
-		resp = await oidc_session.fetch(url, options);
+		resp = await solidAuthFetcher.fetch(url, options);
 		if (resp.status >= 200 && resp.status <= 300) {
 			console.log(resp.status + " - " + resp.statusText);
 			updateTable();
@@ -1012,7 +1015,7 @@ async function executeQuery(data_query, is_query) {
 
 	var resp;
 	try {
-		resp = await oidc_session.fetch(url, options)
+		resp = await solidAuthFetcher.fetch(url, options)
 
 		if (resp.ok && resp.status == 200) {
 			var data = await resp.json();
@@ -1132,7 +1135,7 @@ async function predicateRange() {
 
 	var resp;
 	try {
-		resp = await oidc_session.fetch(url, options); // resp awaits completion of fetch
+		resp = await solidAuthFetcher.fetch(url, options); // resp awaits completion of fetch
 
 		if (resp.status >= 200 && resp.status <= 300) {
 			console.log(resp.status + " - " + resp.statusText);
@@ -1180,7 +1183,7 @@ async function turtleGen() {
 
 	var resp;
 	try {
-		resp = await oidc_session.fetch(url, options);
+		resp = await solidAuthFetcher.fetch(url, options);
 		if (resp.status >= 200 && resp.status <= 300) {
 			hideSpinner();
 			console.log(resp.status + " - " + resp.statusText);
@@ -1241,7 +1244,7 @@ async function turtleDel() {
 
 	var resp;
 	try {
-		resp = await oidc_session.fetch(url, options);
+		resp = await solidAuthFetcher.fetch(url, options);
 		if (resp.status >= 200 && resp.status <= 300) {
 			hideSpinner();
 			console.log(resp.status + " - " + resp.statusText);
@@ -1321,7 +1324,7 @@ async function fetchProfile(url) {
 
 	var resp;
 	try {
-		resp = await oidc_session.fetch(url, options);
+		resp = await solidAuthFetcher.fetch(url, options);
 		if (resp.ok) {
 			var body = await resp.text();
 			var contentType = resp.headers.get('content-type');
@@ -1363,7 +1366,9 @@ $(document).ready(async function () {
 
         state = new State();
 
-	await oidc_session.handleIncomingRedirect({url:window.location.href, restorePreviousSession: true});
+	solidAuthFetcher.onSession((session) => {
+	   updateLoginState(session);
+	})
 
 	$('[data-toggle="tooltip"]').tooltip({
 		placement: 'right'

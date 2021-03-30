@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Select your Identity Provider</title>
-  <script src="./solid-client-authn.bundle.js"></script>
+  <script src="./solid-auth-fetcher.bundle.js"></script>
 
   <style>
     body, button, input {
@@ -150,20 +150,9 @@
 </body>
 <script>
 
-  const client = solidClientAuthentication;
-  var session = null;
-
-
-  const authCode =
-    new URL(window.location.href).searchParams.get("code") ||
-    // FIXME: Temporarily handle both auth code and implicit flow.
-    // Should be either removed or refactored.
-    new URL(window.location.href).searchParams.get("access_token");
-
-
-  var sessInfo = null;
-  var session = null;
-
+  var url = new URL(window.location.href)
+  url.hash = ''
+  const callback = url.href
 
   /**
    * Gets called when the page loads
@@ -172,32 +161,29 @@
     initButtons()
 
     if (window.location.hash === '#relogin') {
-      await client.logout();
-      window.location.reload();
+      await solidAuthFetcher.logout();
     }
 
-    if (authCode) {
-      sessInfo = await client.handleIncomingRedirect(window.location.href);
-      session = client.getDefaultSession();
-    } else {
-      session = new client.Session();
-      await session.handleIncomingRedirect({url:window.location.href, restorePreviousSession: true});
-      sessInfo = session.info;
-    }
+    const session = await solidAuthFetcher.getSession();
 
     // Check if user is already logged in
-    if (sessInfo.isLoggedIn && sessInfo.webId) {
+    if (session && session.loggedIn && session.webId) {
+      loggedIn(session.webId);
+    }
+  })
+
+
+  function loggedIn(webId) {
       show('logged')
       show('logout')
-      setField("webid", sessInfo.webId)
+      setField("webid", webId)
       setTimeout(function (){
         if (window.opener){
           window.opener.location.reload();
           close();
         }
       }, 3000);
-    }
-  })
+  }
 
 
   async function login (provider) {
@@ -205,19 +191,15 @@
     document.getElementById('custom-idp').value = provider;
 
     try {
-     if (!session.info.isLoggedIn) 
-     {
-        // If you are not logged in, initiate the login
-        await session.login({
-          redirectUrl: window.location.href,
-          oidcIssuer: provider
-        });
-     } 
-     else {
-        // The page was loaded after a redirect from the IdP
-        document.getElementById("WebId").innerHTML = sessInfo.webId;
-     }
+      var session = await solidAuthFetcher.login({
+          oidcIssuer: provider,
+          popUp: false,
+          redirect: callback
+        })
 
+      if (session && session.loggedIn && session.webId) {
+        loggedIn(session.webId);
+      }
     } catch (error) {
       console.log('Error logging in:')
       console.error(error)
@@ -237,10 +219,7 @@
   
   function logout () {
     console.log('Logging out...')
-    if (session) {
-      session.logout();
-      window.location.reload();
-    }
+    solidAuthFetcher.logout();
     hide('logged')
     hide('logout')
   }
@@ -249,7 +228,7 @@
    * App/UI logic. This would normally done in React, Ember, Vue, etc.
    */
   function initButtons () {
-    initButton('login_community', () => login('https://solid.community'))
+    initButton('login_community', () => login('https://solidcommunity.net'))
     initButton('login_inrupt', () => login('https://inrupt.net/'))
     initButton('login_opl_v56', () => login('https://solid.openlinksw.com:8443'))
     initButton('login_opl_v5', () => login('https://solid.openlinksw.com:8445'))
