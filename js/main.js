@@ -1367,7 +1367,7 @@ $(document).ready(async function () {
         state = new State();
 
 	solidAuthFetcher.onSession((session) => {
-	   updateLoginState(session);
+	   state.updateLoginState(session);
 	})
 
 	$('[data-toggle="tooltip"]').tooltip({
